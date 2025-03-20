@@ -5,6 +5,7 @@ import 'package:testik2/screens/adjust_screen.dart';
 import 'package:testik2/screens/blur_screen.dart';
 import 'package:testik2/screens/crop_screen.dart';
 import 'package:testik2/screens/edit_screen.dart';
+import 'package:testik2/screens/sticker_screen.dart';
 import 'package:testik2/screens/tint_screen.dart';
 import 'package:testik2/screens/filter_screen.dart';
 import 'package:testik2/screens/fit_screen.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
         '/fit': (_) => FitScreen(),
         '/tint': (_) => TintScreen(),
         '/blur': (_) => BlurScreen(),
+        '/sticker': (_) => StickerScreen(),
       },
       initialRoute: '/',
     );

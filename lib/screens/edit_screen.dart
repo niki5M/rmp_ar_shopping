@@ -93,6 +93,13 @@ class _EditScreenState extends State<EditScreen> {
                       Navigator.of(context).pushReplacementNamed('/blur');
                     }
                 ),
+                _bottomButItem(
+                    'assets/icons/fit_button.png',
+                    'Sticker',
+                    onPress: (){
+                      Navigator.of(context).pushReplacementNamed('/sticker');
+                    }
+                ),
 
               ],
             ),

@@ -141,13 +141,13 @@ class _FitScreenState extends State<FitScreen> {
   Widget _buildBottomBar() {
     return Container(
       width: double.infinity,
-      height: showBlur ? 250 : 150, // Увеличиваем высоту при размытии
+      height: showBlur ? 250 : 150,
       color: Colors.black87,
       child: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (showBlur) _blurSlider(), // Ползунок размытия
+            if (showBlur) _blurSlider(),
             SizedBox(
               height: 50,
               child: SingleChildScrollView(
@@ -174,7 +174,7 @@ class _FitScreenState extends State<FitScreen> {
                 _bottomBarItem(Icons.aspect_ratio_outlined, 'Ratio', () => showActiveWidget(r: true)),
                 _bottomBarItem(Icons.blur_linear_outlined, 'Blur', () => showActiveWidget(b: true)),
                 _bottomBarItem(Icons.color_lens_outlined, 'Color', () {
-                  _pickBackgroundColor(); // Вызовем диалог выбора цвета
+                  _pickBackgroundColor();
                   showActiveWidget(c: true);
                 }),
                 _bottomBarItem(Icons.texture_outlined, 'Texture', () => showActiveWidget(t: true)),

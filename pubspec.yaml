@@ -41,6 +41,7 @@ dependencies:
   screenshot: ^3.0.0
   colorfilter_generator: ^0.0.8
   flutter_colorpicker: ^1.1.0
+  lindi_sticker_widget: ^1.0.3
 
 dev_dependencies:
   flutter_test:
@@ -82,6 +83,9 @@ flutter:
     - assets/icons/hue_button.png
     - assets/icons/sepia_button.png
     - assets/icons/fit_button.png
+    - assets/stickers/eyes.png
+    - assets/stickers/love.png
+    - assets/stickers/smile.png
 
   #   - images/a_dot_ham.jpeg
 
