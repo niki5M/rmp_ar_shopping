@@ -51,20 +51,22 @@ class _EditScreenState extends State<EditScreen> {
             child: Row(
 
               children: [
+                // Update the navigation in the bottom buttons:
                 _bottomButItem(
                     'assets/icons/filtr_button.png',
-                  'Обрезать',
-                  onPress: (){
-                    Navigator.of(context).pushReplacementNamed('/crop');
-                  }
+                    'Обрезать',
+                    onPress: () {
+                      Navigator.pushNamed(context, '/crop');
+                    }
                 ),
                 _bottomButItem(
                     'assets/icons/filtr_button.png',
                     'Фильтр',
-                    onPress: (){
-                      Navigator.of(context).pushReplacementNamed('/filter');
+                    onPress: () {
+                      Navigator.pushNamed(context, '/filter');
                     }
                 ),
+
                 _bottomButItem(
                     'assets/icons/adjust_button.png',
                     'Обработка',

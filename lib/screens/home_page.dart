@@ -1,71 +1,146 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:testik2/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:testik2/features/auth/presentation/bloc/auth_event.dart';
+import 'package:testik2/features/auth/presentation/bloc/auth_state.dart';
 import 'package:testik2/features/auth/presentation/pages/login_page.dart';
 
-import '../features/auth/presentation/bloc/auth_state.dart';
+import '../../helper/image_picker.dart';
+import '../../providers/image_provider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   static route() => MaterialPageRoute(builder: (context) => const HomePage());
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late AppImageProvider imageProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    imageProvider = Provider.of<AppImageProvider>(context, listen: false);
+  }
+
+  Future<void> _pickImage() async {
+    AppImagePicker(source: ImageSource.gallery).pick(
+      onPick: (File? image) {
+        if (image != null) {
+          imageProvider.changeImageFile(image);
+          Navigator.pushNamed(context, '/edit');
+        }
+      },
+    );
+  }
+
+  Future<void> _captureImage() async {
+    AppImagePicker(source: ImageSource.camera).pick(
+      onPick: (File? image) {
+        if (image != null) {
+          imageProvider.changeImageFile(image);
+          Navigator.pushNamed(context, '/edit');
+        }
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: BlocBuilder<AuthBloc, AuthState>(
-          builder: (context, state) {
-            if (state is AuthSuccess) {
-              return Text(
-                'Welcome, ${state.user.name}!',
-                style: const TextStyle(color: Colors.white),
-              );
-            }
-            return const Text(
-              'Welcome!',
-              style: TextStyle(color: Colors.white),
-            );
-          },
-        ),
-        backgroundColor: Colors.orange,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout, color: Colors.white),
-            onPressed: () {
-              context.read<AuthBloc>().add(AuthLogout());
-              Navigator.pushAndRemoveUntil(
-                context,
-                LoginPage.route(),
-                    (route) => false,
-              );
-            },
-          ),
-        ],
-      ),
+      backgroundColor: const Color(0xff0D1313),
       body: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
           if (state is AuthSuccess) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Email: ${state.user.email}',
-                    style: const TextStyle(fontSize: 20),
+            return Stack(
+              children: [
+                // Background image
+                Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/mmain.png'),
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Name: ${state.user.name}',
-                    style: const TextStyle(fontSize: 20),
+                ),
+
+                // Logout button at top right
+                Positioned(
+                  top: 40,
+                  right: 20,
+                  child: IconButton(
+                    icon: const Icon(Icons.logout, color: Colors.white, size: 30),
+                    onPressed: () {
+                      context.read<AuthBloc>().add(AuthLogout());
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        LoginPage.route(),
+                            (route) => false,
+                      );
+                    },
                   ),
-                ],
-              ),
+                ),
+
+                // Action buttons at bottom
+                Positioned(
+                  bottom: 40,
+                  left: 0,
+                  right: 0,
+                  child: _buildActionButtons(),
+                ),
+              ],
             );
           }
           return const Center(child: CircularProgressIndicator());
         },
+      ),
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 60),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildImageActionButton('Редактировать', _pickImage),
+          _buildImageActionButton('Камера', _captureImage),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImageActionButton(String label, VoidCallback onPressed) {
+    return SizedBox(
+      width: 175,
+      child: ElevatedButton(
+
+        style: ElevatedButton.styleFrom(
+          fixedSize: const Size(175, 45),
+          side: const BorderSide(color: Colors.white, width: 1),
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+        onPressed: onPressed,
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
       ),
     );
   }

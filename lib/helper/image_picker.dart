@@ -1,20 +1,18 @@
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-class AppImagePicker{
-
-  ImageSource source;
+class AppImagePicker {
+  final ImageSource source;
 
   AppImagePicker({required this.source});
 
-  pick({onPick}) async{
-    final ImagePicker picker = ImagePicker();
-    final image = await picker.getImage(source: source);
-    if(image != null){
-      onPick(File(image.path));
-    } else{
+  Future<void> pick({required Function(File?) onPick}) async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final image = await picker.pickImage(source: source);
+      onPick(image != null ? File(image.path) : null);
+    } catch (e) {
       onPick(null);
     }
   }
-
 }
