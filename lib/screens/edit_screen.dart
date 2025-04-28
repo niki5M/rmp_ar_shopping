@@ -95,9 +95,9 @@ class _EditScreenState extends State<EditScreen> {
                 ),
                 _bottomButItem(
                     'assets/icons/fit_button.png',
-                    'Sticker',
+                    'Text',
                     onPress: (){
-                      Navigator.of(context).pushReplacementNamed('/sticker');
+                      Navigator.of(context).pushReplacementNamed('/text');
                     }
                 ),
 

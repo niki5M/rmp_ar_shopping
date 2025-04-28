@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:testik2/providers/image_provider.dart';
-import 'package:testik2/screens/adjust_screen.dart';
-import 'package:testik2/screens/blur_screen.dart';
-import 'package:testik2/screens/crop_screen.dart';
-import 'package:testik2/screens/edit_screen.dart';
-import 'package:testik2/screens/sticker_screen.dart';
-import 'package:testik2/screens/tint_screen.dart';
-import 'package:testik2/screens/filter_screen.dart';
-import 'package:testik2/screens/fit_screen.dart';
-import 'package:testik2/screens/start_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:testik2/init_dependencies.dart';
 
-void main() {
-  runApp( MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => AppImageProvider())
-  ], child:
-      const MyApp()),);
+import 'core/theme/theme.dart';
+import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/auth/presentation/pages/login_page.dart';
+
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initDependencies();
+  runApp(
+      MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => serviceLocator<AuthBloc>(),
+          )
+        ], child: const MyApp(),
+      ));
 }
 
 class MyApp extends StatelessWidget {
@@ -24,33 +25,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.black87,
-        primarySwatch: Colors.blue,
-        appBarTheme: AppBarTheme(
-          color: Colors.transparent,
-        ),
-        sliderTheme: const SliderThemeData(
-          showValueIndicator: ShowValueIndicator.always
-        )
-      ),
-
-      routes: <String, WidgetBuilder>{
-        '/': (_) => const StartScreen(),
-        '/edit': (_) => EditScreen(),
-        '/crop': (_) => CropScreen(),
-        '/filter': (_) => FilterScreen(),
-        '/adjust': (_) => AdjustScreen(),
-        '/fit': (_) => FitScreen(),
-        '/tint': (_) => TintScreen(),
-        '/blur': (_) => BlurScreen(),
-        '/sticker': (_) => StickerScreen(),
-      },
-      initialRoute: '/',
+      debugShowCheckedModeBanner: false,
+      title: 'ArtPhoto',
+      theme: AppTheme.darkThemeMode,
+      home: const LoginPage(),
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 class Building extends StatelessWidget {
   const Building({super.key});
