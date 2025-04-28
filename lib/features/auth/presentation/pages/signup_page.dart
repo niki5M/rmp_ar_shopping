@@ -9,6 +9,7 @@ import 'package:testik2/features/auth/presentation/widgets/auth_field.dart';
 import '../../../../core/common/widgets/loader.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../screens/home_page.dart';
+import '../../../../screens/home_screen.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 
@@ -58,7 +59,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   } else if (state is AuthSuccess) {
                     Navigator.pushAndRemoveUntil(
                       context,
-                      HomePage.route(),
+                      MaterialPageRoute(builder: (context) => const HomeScreen()),
                           (route) => false,
                     );
                   }

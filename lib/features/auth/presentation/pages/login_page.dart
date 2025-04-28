@@ -10,6 +10,7 @@ import '../../../../core/common/widgets/loader.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/utils/show_snackbar.dart';
 import '../../../../screens/home_page.dart';
+import '../../../../screens/home_screen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -54,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
                   } else if (state is AuthSuccess) { // Должно быть AuthSuccess
                     Navigator.pushAndRemoveUntil(
                       context,
-                      HomePage.route(),
+                      MaterialPageRoute(builder: (context) => const HomeScreen()),
                           (route) => false,
                     );
                   }
