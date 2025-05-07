@@ -9,8 +9,7 @@ import 'package:testik2/features/auth/presentation/widgets/auth_field.dart';
 import '../../../../core/common/widgets/loader.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/utils/show_snackbar.dart';
-import '../../../../screens/home_page.dart';
-import '../../../../screens/home_screen.dart';
+import '../../../home/screens/home_screen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -38,21 +37,13 @@ class _LoginPageState extends State<LoginPage> {
       child: Scaffold(
         body: Stack(
           children: [
-            Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/sign.png'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: BlocConsumer<AuthBloc, AuthState>(
                 listener: (context, state) {
                   if (state is AuthFailure) {
                     showSnackBar(context, state.message);
-                  } else if (state is AuthSuccess) { // Должно быть AuthSuccess
+                  } else if (state is AuthSuccess) {
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => const HomeScreen()),
@@ -71,14 +62,14 @@ class _LoginPageState extends State<LoginPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const Text(
-                          'Sign In',
+                          'Вход',
                           style: TextStyle(
-                            color: Palete.whiteColor,
-                            fontSize: 50,
+                            color: Palete.lightPrimaryColor,
+                            fontSize: 32,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 70),
                         AuthField(
                           hintText: "Email",
                           controller: emailController,
@@ -110,17 +101,17 @@ class _LoginPageState extends State<LoginPage> {
                           },
                           child: RichText(
                             text: TextSpan(
-                              text: "Don't have an account? ",
-                              style: Theme.of(context).textTheme.titleMedium,
+                              text: "Нет аккаунта? ",
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Palete.blackColor),
                               children: [
                                 TextSpan(
-                                  text: 'Sign up',
+                                  text: 'Создать аккаунт',
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleMedium
                                       ?.copyWith(
-                                    color: Palete.primaryOrange,
-                                    fontWeight: FontWeight.bold,
+                                    color: Palete.lightPrimaryColor,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ],

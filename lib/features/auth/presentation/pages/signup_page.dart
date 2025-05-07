@@ -8,8 +8,7 @@ import 'package:testik2/features/auth/presentation/widgets/auth_field.dart';
 
 import '../../../../core/common/widgets/loader.dart';
 import '../../../../core/theme/colors.dart';
-import '../../../../screens/home_page.dart';
-import '../../../../screens/home_screen.dart';
+import '../../../home/screens/home_screen.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 
@@ -42,14 +41,6 @@ class _SignUpPageState extends State<SignUpPage> {
       child: Scaffold(
         body: Stack(
           children: [
-            Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/sign.png'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: BlocConsumer<AuthBloc, AuthState>(
@@ -75,13 +66,13 @@ class _SignUpPageState extends State<SignUpPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const Text(
-                          'Sign Up',
+                          'Регистрация',
                           style: TextStyle(
-                              color: Palete.whiteColor,
-                              fontSize: 50,
+                              color: Palete.lightPrimaryColor,
+                              fontSize: 32,
                               fontWeight: FontWeight.bold),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 70),
                         AuthField(hintText: "Name", controller: nameController),
                         const SizedBox(height: 20),
                         AuthField(
@@ -110,16 +101,17 @@ class _SignUpPageState extends State<SignUpPage> {
                           },
                           child: RichText(
                             text: TextSpan(
-                                text: "Already have an account? ",
-                                style: Theme.of(context).textTheme.titleMedium,
+                                text: "Уже есть аккаунт? ",
+                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: Palete.blackColor),
                                 children: [
                                   TextSpan(
-                                    text: 'Sign in',
+                                    text: 'Войти',
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleMedium
                                         ?.copyWith(
-                                        color: Palete.primaryOrange,
+                                        color: Palete.lightPrimaryColor,
                                         fontWeight: FontWeight.bold),
                                   )
                                 ]),
