@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../cart/cart_screen.dart';
-import '../../profile/profile_screen.dart';
+import 'profile_screen.dart';
 import '../widgets/product.dart';
 import '../widgets/product_item.dart';
 import '../widgets/filter_chip_row.dart';
@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
     'https://img.freepik.com/premium-photo/analog-fashion-watches-isolated-white-background_47469-280.jpg?w=1800',
   ];
 
-// Названия для часов с брендами и характеристиками
+  // Названия для часов с брендами и характеристиками
   final List<String> _productNames = [
     'SportX Pro (чёрный/красный)',
     'Elegance Gold (золотой)',
@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
     'Vintage Rose (розовое золото)',
   ];
 
-// Описания для часов
+  // Описания для часов
   final List<String> _productDescriptions = [
     'Спортивные часы с хронографом, водонепроницаемость 10ATM',
     'Элегантные золотые часы с кожаным ремешком',
@@ -72,11 +72,11 @@ class _HomeScreenState extends State<HomeScreen> {
         'id': id,
         'title': _productNames[i],
         'description': _productDescriptions[i],
-        'price': (i + 5) * 99.99, // Цены от 499.95 до 1399.86
+        'price': (i + 86) * 99.99,
         'imageUrl': _mockImages[i],
-        'isNew': i % 3 == 0, // Каждый третий товар - новинка
-        'isBest': i % 2 == 0, // Каждый второй товар - лучший
-        'brand': ['Santarelli', 'LuxTime', 'ChronoMaster'][i % 3], // Чередуем бренды
+        'isNew': i % 3 == 0,
+        'isBest': i % 2 == 0,
+        'brand': ['Santarelli', 'LuxTime', 'ChronoMaster'][i % 3],
         'material': ['Нержавеющая сталь', 'Титановый сплав', 'Керамика'][i % 3],
         'waterResistant': ['50m', '100m', '200m'][i % 3],
       };
@@ -87,7 +87,9 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_isSearching && _searchController.text.isNotEmpty) {
       final query = _searchController.text.toLowerCase();
       return products.where((p) =>
-          p['title'].toString().toLowerCase().contains(query)).toList();
+      p['title'].toString().toLowerCase().contains(query) ||
+          p['description'].toString().toLowerCase().contains(query) ||
+          p['brand'].toString().toLowerCase().contains(query)).toList();
     }
 
     switch (_selectedFilter) {
@@ -121,6 +123,10 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _handleSearchChanged(String query) {
+    setState(() {});
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -131,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cart = context.watch<CartProvider>();
-    final allProducts = _generateProducts(_mockImages.length); // Используем длину списка изображений
+    final allProducts = _generateProducts(_mockImages.length);
     final filteredProducts = _filterProducts(allProducts);
 
     final List<Widget> _pages = [
@@ -150,24 +156,121 @@ class _HomeScreenState extends State<HomeScreen> {
         onCartPressed: () => _onTabTapped(2),
         cartItemCount: cart.itemCount,
         userName: 'Райан Гослинг',
+        onSearchChanged: _handleSearchChanged,
       ),
       body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onTabTapped,
-        selectedItemColor: theme.colorScheme.primary,
-        unselectedItemColor: theme.unselectedWidgetColor,
-        backgroundColor: theme.cardColor,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Главная'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.favorite_border), label: 'Избранное'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart_outlined), label: 'Корзина'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline), label: 'Профиль'),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              spreadRadius: 2,
+              offset: const Offset(0, -5),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+          child: BottomNavigationBar(
+            currentIndex: _selectedIndex,
+            onTap: _onTabTapped,
+            type: BottomNavigationBarType.fixed,
+            elevation: 0,
+            backgroundColor: theme.cardColor,
+            selectedItemColor: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
+            unselectedItemColor: theme.brightness == Brightness.dark
+                ? Colors.white.withOpacity(0.6)
+                : const Color(0xFF9FBAF1),
+
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+            items: [
+              _buildBottomNavItem(
+                icon: Icons.home_outlined,
+                activeIcon: Icons.home,
+                isActive: _selectedIndex == 0,
+              ),
+              _buildBottomNavItem(
+                icon: Icons.favorite_outline,
+                activeIcon: Icons.favorite,
+                isActive: _selectedIndex == 1,
+              ),
+              _buildBottomNavItem(
+                icon: Icons.shopping_bag_outlined,
+                activeIcon: Icons.shopping_bag,
+                isActive: _selectedIndex == 2,
+                badgeValue: cart.itemCount,
+              ),
+              _buildBottomNavItem(
+                icon: Icons.person_outline,
+                activeIcon: Icons.person,
+                isActive: _selectedIndex == 3,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  BottomNavigationBarItem _buildBottomNavItem({
+    required IconData icon,
+    required IconData activeIcon,
+    required bool isActive,
+    int? badgeValue,
+  }) {
+    return BottomNavigationBarItem(
+      icon: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            transitionBuilder: (child, animation) => ScaleTransition(
+              scale: animation,
+              child: child,
+            ),
+            child: Icon(
+              isActive ? activeIcon : icon,
+              key: ValueKey(isActive ? 'active_$icon' : icon),
+              size: 28,
+              color: isActive
+                  ? (Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black)
+                  : (Theme.of(context).brightness == Brightness.dark
+                  ? Color(0xFF9FBAF1)
+                  : const Color(0xFF9FBAF1)),
+
+            ),
+          ),
+          if (badgeValue != null && badgeValue > 0)
+            Positioned(
+              right: -8,
+              top: -4,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.error,
+                  shape: BoxShape.circle,
+                ),
+                constraints: const BoxConstraints(
+                  minWidth: 20,
+                  minHeight: 20,
+                ),
+                child: Text(
+                  badgeValue.toString(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
         ],
       ),
+      label: '',
     );
   }
 
@@ -190,14 +293,6 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
               children: const [
-                Text(
-                  'SANTARELLI',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Spacer(),
               ],
             ),
           ),

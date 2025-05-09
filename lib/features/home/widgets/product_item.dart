@@ -6,7 +6,6 @@ import '../../cart/cart_provider.dart';
 import '../../favorites/favorites_provider.dart';
 import 'package:testik2/core/theme/colors.dart';
 
-// Обновленный ProductItem
 class ProductItem extends StatelessWidget {
   final Product product;
 
@@ -83,7 +82,9 @@ class ProductItem extends StatelessWidget {
                       color: Palete.lightPrimaryColor,
                       width: 2,
                     ),
-                    backgroundColor: Colors.white,
+                    backgroundColor: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.black87
+                        : Colors.white,
                     foregroundColor: Palete.lightPrimaryColor,
                   ),
                 ),
@@ -96,7 +97,7 @@ class ProductItem extends StatelessWidget {
             child: IconButton(
               icon: Icon(
                 isFavorite ? Icons.favorite : Icons.favorite_border,
-                color: isFavorite ? Colors.red : Colors.white,
+                color: isFavorite ? Colors.red : Colors.black87,
               ),
               onPressed: () {
                 favorites.toggleFavorite(product);

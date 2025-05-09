@@ -13,6 +13,11 @@ class FavoritesProvider extends ChangeNotifier {
     return _favorites.any((product) => product.id == id);
   }
 
+  void clearFavorites() {
+    _favorites.clear();
+    notifyListeners();
+  }
+
   void toggleFavorite(Product product) {
     if (isFavorite(product.id)) {
       _favorites.removeWhere((p) => p.id == product.id);

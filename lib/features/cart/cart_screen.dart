@@ -1,7 +1,7 @@
-// lib/features/cart/screens/cart_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import '../../core/theme/colors.dart';
+import '../home/screens/profile_screen.dart';
 import 'cart_provider.dart';
 
 class CartScreen extends StatelessWidget {
@@ -99,13 +99,38 @@ class CartScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16),
             child: ElevatedButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => CheckoutModal(
+                    items: cart.items,
+                    totalPrice: cart.totalAmount,
+                  ),
+                ).then((_) {
+                  if (Provider.of<OrderHistoryProvider>(context, listen: false).orders.isNotEmpty) {
+                    cart.clear();
+                  }
+                });
+              },
+              child: const Text(
+                'Оформить заказ',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
+                fixedSize: const Size(double.infinity, 35),
+                side: BorderSide(
+                  color: Palete.lightPrimaryColor,
+                  width: 2,
+                ),
+                backgroundColor: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.black87
+                    : Colors.white,
+                foregroundColor: Palete.lightPrimaryColor,
               ),
-              onPressed: () {
-                // Оформление заказа
-              },
-              child: const Text('Оформить заказ'),
             ),
           ),
         ],

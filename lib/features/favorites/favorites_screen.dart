@@ -1,4 +1,3 @@
-// lib/features/favorites/screens/favorites_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../cart/cart_provider.dart';
@@ -18,13 +17,18 @@ class FavoritesScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Избранное'),
         actions: [
+          if (favorites.favorites.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.delete_outline),
+              tooltip: 'Очистить избранное',
+              onPressed: () {
+                _showClearDialog(context, favorites);
+              },
+            ),
           Stack(
             alignment: Alignment.topRight,
             children: [
-              IconButton(
-                icon: Icon(Icons.shopping_bag_outlined, color: Colors.grey.shade800),
-                onPressed: () {},
-              ),
+              const SizedBox(width: 48), // пространство под корзину
               if (cart.itemCount > 0)
                 Positioned(
                   right: 6,
@@ -52,6 +56,46 @@ class FavoritesScreen extends StatelessWidget {
       body: favorites.favorites.isEmpty
           ? _buildEmptyState()
           : _buildFavoritesList(favorites.favorites),
+    );
+  }
+
+  void _showClearDialog(BuildContext context, FavoritesProvider favorites) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: theme.cardColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        titleTextStyle: theme.textTheme.titleLarge,
+        contentTextStyle: theme.textTheme.bodyMedium,
+        title: Text('Очистить избранное', style: TextStyle(color: theme.brightness == Brightness.dark
+            ? Colors.white
+            : Colors.black87,),),
+        content: const Text('Вы уверены, что хотите удалить все избранные товары?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(
+              'Отмена',
+              style: TextStyle(color: theme.colorScheme.primary),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              favorites.clearFavorites();
+              Navigator.of(ctx).pop();
+            },
+            child: Text(
+              'Очистить',
+              style: TextStyle(color: theme.colorScheme.error),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

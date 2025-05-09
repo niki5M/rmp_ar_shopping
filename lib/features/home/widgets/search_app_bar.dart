@@ -7,6 +7,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onCartPressed;
   final int cartItemCount;
   final String userName;
+  final ValueChanged<String>? onSearchChanged;
 
   const SearchAppBar({
     super.key,
@@ -16,11 +17,11 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.onCartPressed,
     required this.cartItemCount,
     required this.userName,
+    this.onSearchChanged,
   });
 
   @override
   Widget build(BuildContext context) {
-
     final theme = Theme.of(context);
 
     return AppBar(
@@ -38,6 +39,12 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
           hintStyle: TextStyle(color: theme.hintColor),
           border: InputBorder.none,
         ),
+        onChanged: onSearchChanged,
+        onSubmitted: (value) {
+          if (value.isEmpty) {
+            onToggleSearch();
+          }
+        },
       )
           : Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,12 +65,26 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
       actions: [
+        if (isSearching)
+          IconButton(
+            icon: const Icon(Icons.arrow_left),
+            onPressed: () {
+              searchController.clear();
+              onSearchChanged?.call('');
+            },
+          ),
         IconButton(
           icon: Icon(
             isSearching ? Icons.close : Icons.search,
             color: theme.appBarTheme.iconTheme?.color,
           ),
-          onPressed: onToggleSearch,
+          onPressed: () {
+            if (isSearching) {
+              searchController.clear();
+              onSearchChanged?.call('');
+            }
+            onToggleSearch();
+          },
         ),
         if (!isSearching)
           Stack(
